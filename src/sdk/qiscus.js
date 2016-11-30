@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 class qiscusSDK extends EventEmitter {
   constructor() {
     super();
-    this.UI = new UI();
+    this.UI = new UI(this);
     this.isLoading = false; 
     this.isInitted = false;
     this.isOnGoingCall = false;
@@ -29,24 +29,25 @@ class qiscusSDK extends EventEmitter {
       }, 2000)
     })
   }
-  call() {}
   endCall() {}
 }
 
 class UI {
-  constructor() {
-    self.isLoading = false
-    this.isOnGoingCall = false
-    this.isInitted = false
+  constructor(parent) {
+    this.parent = parent
+    this.toastr = { message: '', style: 'info' };
     this.callee = []
   }
   call(targets) {
-    this.isLoading = true;
+    if(!this.parent.isInitted) return false;
     this.callee.length = 0;
+    console.info(targets);
+    if(typeof targets != "object") targets = [targets];
     targets.map((target) => {
       this.callee.push(target);
     })
-    this.isOnGoingCall = true;
+    this.parent.isOnGoingCall = true;
+    vStore.dispatch('call', targets);
   }
   endCall() {
     this.isOnGoingCall = false;

@@ -17,8 +17,8 @@
     props: ['submitHandler', 'minimizeHandler'],
     data() {
       return {
-        email: '',
-        username: ''
+        email: 'guest@qiscus.com',
+        username: 'Guest'
       }
     },
     methods: {

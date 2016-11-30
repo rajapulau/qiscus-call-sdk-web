@@ -35,8 +35,8 @@ $borderSize: 5px;
   bottom: 10px; right: 10px;
   transform: translateY(150%);
   transition: all .32s ease;
-  width: 200px;
   background: lighten($primary, 57);
+  min-width: 200px;
   padding: 20px;
   border-radius: $borderSize;
   box-shadow: 0 0 17px rgba(0,0,0,.3);
@@ -87,3 +87,6 @@ $borderSize: 5px;
     cursor: pointer;
   }
 }
+
+@import './_rtc-call-window.scss';
+@import './_toastr.scss';

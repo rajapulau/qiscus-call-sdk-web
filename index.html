@@ -7,11 +7,50 @@
     <style>
       *, *:before, *:after {
         margin: 0; padding: 0;
+        box-sizing: border-box;
       }
+      body { background: #2c3e50; font-family: sans-serif; color: #444; }
+      #container { margin: 50px auto; max-width: 80%; text-align: center; }
+      #container i.fa-user { font-size: 160px; display: block; color: #16a085; }
+      #container h1 { margin-bottom: 2em; color: #FFF; 
+        text-shadow: 0px 3px 0px #b2a98f,
+                      0px 14px 10px rgba(0,0,0,0.15),
+                      0px 24px 2px rgba(0,0,0,0.1),
+                      0px 30px 30px rgba(0,0,0,0.1); }
+      .users li { display: inline-block; width: 150px; background: #FFF; 
+        border-radius: 5px; padding: 10px; text-align: center;
+        cursor: pointer; box-shadow: 0 3px 0 #ddd, 0 5px 0 #eee, 
+        0 7px 17px rgba(0,0,0,.5); transition: all .32s ease;
+        line-height: 1.3em; margin: 10px; }
+        .users li:hover { transform: translateY(-3px); }
+      .users strong, small { display: block; }
     </style>
   </head>
   <body>
+    <div id="container">
+      <h1>Choose someone to talk to:</h1>
+      <ul class="users">
+        <li data-email="fikri@qiscus.com">
+          <i class="fa fa-user"></i>
+          <strong>Rijalul Fikri</strong>
+          <small>fikri@qiscus.com</small>
+        </li>
+        <li data-email="contact.us@qiscus.com">
+          <i class="fa fa-user"></i>
+          <strong>Qiscus CS</strong>
+          <small>contact.us@qiscus.com</small>
+        </li>
+      </ul>
+    </div>
     <div id="qiscus-rtc-app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      var li = document.querySelectorAll('.users li');
+      li.forEach(function(l){
+        l.addEventListener('click', function(){
+          qiscus.UI.call(this.dataset.email);
+        })
+      })
+    </script>
   </body>
 </html>

@@ -8,9 +8,12 @@ Vue.use(Vuex)
 
 // Create an object to hold the initial state when
 // the app starts up
+const toastrPrimitive = { message: '', style: 'info' };
 const state = {
   qiscus: qiscus,
   widgetIsToggled: false,
+  isOnGoingCall: false,
+  toastr: toastrPrimitive
   // isLoading: qiscus.isLoading
 }
 
@@ -20,8 +23,23 @@ const mutations = {
     state.widgetIsToggled = !state.widgetIsToggled
   },
   INIT(state, payload) {
-    console.info(payload);
     qiscus.init(payload.email, payload.username, payload.key)
+  },
+  CALL(state, payload) {
+    state.isOnGoingCall = true;
+  },
+  END_CALL(state) {
+    state.isOnGoingCall = false;
+  },
+  EXPAND_WIDGET(state) {
+    state.widgetIsToggled = true;
+  },
+  SET_TOASTR(state, payload) {
+    state.toastr.message = payload.message;
+    state.toastr.style = payload.info;
+  },
+  HIDE_TOASTR(state) {
+    state.toastr = toastrPrimitive;
   }
 }
 
