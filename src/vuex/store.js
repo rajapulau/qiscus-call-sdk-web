@@ -13,7 +13,7 @@ const state = {
   qiscus: qiscus,
   widgetIsToggled: false,
   isOnGoingCall: false,
-  toastr: toastrPrimitive
+  toastr: Object.assign({}, toastrPrimitive)
   // isLoading: qiscus.isLoading
 }
 
@@ -39,7 +39,7 @@ const mutations = {
     state.toastr.style = payload.info;
   },
   HIDE_TOASTR(state) {
-    state.toastr = toastrPrimitive;
+    state.toastr = Object.assign({}, toastrPrimitive);
   }
 }
 

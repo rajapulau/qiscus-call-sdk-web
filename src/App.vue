@@ -1,6 +1,6 @@
 <template>
   <div class="qiscus-rtc-app__container">
-    <toastr v-if="toastr.message.length > 0"></toastr>
+    <toastr v-if="toastr.message.length > 0" :message="toastr.message" :style="toastr.style"></toastr>
     <rtc-toggle :loading="isLoading" :is-initted="isInitted" :click-handler="toggleWidget"></rtc-toggle>
     <rtc-widget :expand="widgetIsToggled"
       :is-initted="isInitted" 
@@ -14,19 +14,20 @@
 import store from './vuex/store'
 import RtcToggle from './components/RtcToggle.vue'
 import RtcWidget from './components/RtcWidget.vue'
+import Toastr from './components/Toastr.vue'
 
 require('./scss/qiscus-rtc.scss');
 
 export default {
   name: 'app',
-  components: { RtcToggle, RtcWidget },
+  components: { RtcToggle, RtcWidget, Toastr },
   store,
   computed: {
     isLoading: function(){ return this.$store.state.qiscus.isLoading },
     isInitted: function(){ return this.$store.state.qiscus.isInitted },
     widgetIsToggled: function() { return this.$store.state.widgetIsToggled },
     isOnGoingCall: function() { return this.$store.state.isOnGoingCall },
-    toastr: function() { return this.$store.state.qiscus.UI.toastr }
+    toastr: function() { return this.$store.state.toastr }
   },
   methods: {
     toggleWidget() {

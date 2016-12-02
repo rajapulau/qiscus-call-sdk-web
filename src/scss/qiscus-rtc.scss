@@ -32,8 +32,8 @@ $borderSize: 5px;
 // Rtc Widget Window
 .qrw-window {
   position: absolute;
-  bottom: 10px; right: 10px;
-  transform: translateY(150%);
+  bottom: 70px; right: 10px;
+  transform: translateY(200%);
   transition: all .32s ease;
   background: lighten($primary, 57);
   min-width: 200px;

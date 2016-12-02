@@ -1,7 +1,7 @@
 <template>
   <div class="rtc-call-window">
     <div class="rtc-callee-video">
-      <loader width="100px" height="100px"></loader>
+      <i class="fa fa-user"></i>
       <strong>{{ callee }}</strong>
     </div>
     <div class="rtc-caller-video">

@@ -1,0 +1,19 @@
+.toastr {
+  position: fixed;
+  bottom: 20px; right: 45px;
+  padding: 10px 30px;
+  background: #34495e;
+  border: 1px solid #2c3e50;
+  border-radius: $borderSize;
+  font-size: .9em;
+  box-shadow: 0 0 15px rgba(0,0,0,.3);
+  color: #ecf0f1;
+  &.toastr--success {
+    background: #27ae60;
+    border-color: #2ecc71;
+  }
+  &.toastr--error {
+    background: #c0392b;
+    border-color: #e74c3c;
+  }
+}

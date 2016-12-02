@@ -16,17 +16,14 @@ class qiscusSDK extends EventEmitter {
   }
   init(email, username) {
     const self          = this;
-    self.isLoading      = true;
+    // self.isLoading      = true;
     self.userData.email = email;
     self.userData.username = username;
     // simulating ajax call
     return new Promise((resolve, reject) => {
-      window.setTimeout(function() {
-        self.isLoading = false;
-        self.isInitted = true;
-        console.info('ajax call')
-        return resolve(qiscus);
-      }, 2000)
+      // self.isLoading = false;
+      self.isInitted = true;
+      return resolve(qiscus);
     })
   }
   endCall() {}
@@ -41,7 +38,6 @@ class UI {
   call(targets) {
     if(!this.parent.isInitted) return false;
     this.callee.length = 0;
-    console.info(targets);
     if(typeof targets != "object") targets = [targets];
     targets.map((target) => {
       this.callee.push(target);
