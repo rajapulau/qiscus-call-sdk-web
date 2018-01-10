@@ -82,14 +82,15 @@
     $(function() {
       var str = null;
       var rem_id = null;
-      var name = Date.now().toString();
-      qiscusrtc = new QiscusRTC();
+      //var name = Date.now().toString();
+      var name = 'web';
+      qiscusrtc = new QiscusRTC('sample-application-C2', 'KpPiqKGpoN');
 
       $('#join-button').on('click', function(evt) {
         evt.preventDefault();
         var room = $('#room-id-input').val();
 
-        qiscusrtc.init('sample-application-C2', 'KpPiqKGpoN', name, room, true);
+        qiscusrtc.initCall(name, room, true, true);
         qiscusrtc.onLocalStream = function(stream) {
           $('#videos').removeClass('hidden');
           $('#footer').removeClass('hidden');
@@ -103,6 +104,8 @@
         };
         qiscusrtc.onRemoteStream = function(id, stream) {
           rem_id = id;
+          $('#icons').removeClass('hidden');
+          $('#icons').addClass('active');
           $('#sharing-div').removeClass('active');
           $('#remote-video').addClass('active');
           $('#mini-video').addClass('active');
@@ -115,6 +118,8 @@
         };
         qiscusrtc.onPeerClosed = function(id) {
           if (id == rem_id) {
+            $('#icons').addClass('hidden');
+            $('#icons').removeClass('active');
             $('#remote-video').removeClass('active');
             $('#mini-video').removeClass('active');
             var video = document.querySelector('#local-video');

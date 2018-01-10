@@ -3,19 +3,21 @@
 /* QiscusRTC Signaling Hub
  */
 
-function QiscusRTC() {
+function QiscusRTC(appId, appSecret) {
   var rtc = this;
   rtc.ws = null;
-  rtc.appId = null;
-  rtc.appSecret = null;
+  rtc.room = null;
+  rtc.devices = null;
   rtc.appToken = null;
   rtc.clientId = null;
-  rtc.clientStream = null;
-  rtc.room = null;
   rtc.initiator = false;
-  rtc.devices = null;
+  rtc.autoAccept = false;
+  rtc.clientStream = null;
   rtc.selectedDevices = {};
   rtc.roomFeeds = [];
+
+  rtc.appId = appId;
+  rtc.appSecret = appSecret;
 
   // Auto populate devices
   getDevices();
@@ -41,14 +43,13 @@ function QiscusRTC() {
   };
 }
 
-QiscusRTC.prototype.init = function(appId, appSecret, clientId, room,initiator) {
+QiscusRTC.prototype.initCall = function(clientId, room, initiator, autoAccept) {
   var rtc = this;
 
-  rtc.appId = appId;
-  rtc.appSecret = appSecret;
   rtc.clientId = clientId;
   rtc.room = room;
   rtc.initiator = initiator;
+  rtc.autoAccept = autoAccept;
   rtc.connectWebSocket();
 };
 
@@ -76,15 +77,14 @@ QiscusRTC.prototype.connectWebSocket = function() {
     } else if (res.response == "room_join") {
       if (data.success) {
         var feeds = JSON.parse(data.message);
-        console.log(feeds);
         feeds = feeds.users;
         for (var i = 0; i < feeds.length; i++) {
           if (feeds[i] != rtc.clientId) {
             rtc.roomFeeds[feeds[i]] = {id: feeds[i], status: 0, pc: null};
-            createPeer(feeds[i], true);
-            setTimeout(function() {
-              return;
-            }, 250);
+
+            if (rtc.autoAccept) {
+              autoAccept(feeds[i]);
+            }
           }
         }
       } else {
@@ -97,12 +97,20 @@ QiscusRTC.prototype.connectWebSocket = function() {
     } else if (res.event == "user_leave") {
       setTimeout(function() {
         if (rtc.roomFeeds[data.user]) {
-          removeFeed(data.user);
+          if (rtc.roomFeeds[data.user] != null) {
+            removeFeed(data.user);
+          }
         }
       }, 2000);
     } else if (res.event == "room_data") {
       rtc.onMessage(res.sender, data);
     } else if (res.event == "room_data_private") {
+      if (data.event == "call_ack") {
+        //
+      } else if (data.event == "call_accept") {
+        createPeer(res.sender, true);
+      }
+
       if (data.type == "offer") {
         if (rtc.roomFeeds[res.sender]) {
           createPeer(res.sender, false);
@@ -119,7 +127,14 @@ QiscusRTC.prototype.connectWebSocket = function() {
       } else if (data.type == "answer") {
         rtc.roomFeeds[res.sender].pc.signal(data);
       } else if (data.candidate) {
-        rtc.roomFeeds[res.sender].pc.signal(data);
+        if (data.type) {
+          delete data.type;
+          var candidate = { candidate: data };
+        } else {
+          var candidate = data;
+        }
+
+        rtc.roomFeeds[res.sender].pc.signal(candidate);
       }
     }
   };
@@ -204,6 +219,17 @@ QiscusRTC.prototype.connectWebSocket = function() {
     rtc.ws.send(JSON.stringify(payload));
   };
 
+  function autoAccept(id) {
+    var payload = {
+      request: "room_data",
+      room: rtc.room,
+      recipient: id,
+      data: JSON.stringify({ event: "call_accept" })
+    };
+
+    rtc.ws.send(JSON.stringify(payload));
+  };
+
   function createPeer(feed, i) {
     var pc = new SimplePeer({ initiator: i, stream: rtc.clientStream, config: { iceServers: [
       { urls: 'stun:139.59.110.14:3478' },
@@ -237,15 +263,18 @@ QiscusRTC.prototype.connectWebSocket = function() {
       rtc.roomFeeds[feed].pc.destroy();
     }
 
-    if (rtc.roomFeeds[feed].pc) {
+    if (rtc.roomFeeds[feed].pc != null) {
       rtc.roomFeeds[feed].pc = null;
     }
   }
 
   function removeFeed(feed) {
     if (rtc.roomFeeds[feed]) {
-      resetPeer(feed);
-      delete rtc.roomFeeds[feed];
+
+      if (rtc.roomFeeds[feed] != null) {
+        resetPeer(feed);
+        delete rtc.roomFeeds[feed];
+      }
     }
   }
 };
