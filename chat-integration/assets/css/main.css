@@ -92,7 +92,7 @@ body:before {
 }
 
 .app-sidebar__tool-btn i.contact-list {
-  background: url(./assets/img/icon-bookmark.svg) no-repeat center;
+  background: url('../img/icon-bookmark.svg') no-repeat center;
   background-size: 90%;
   display: block;
   height: 100%;
@@ -142,7 +142,7 @@ body:before {
 }
 
 .app-sidebar__search__icon {
-  background-image: url(./assets/img/icon-search.svg);
+  background-image: url('../img/icon-search.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 15px;
@@ -156,7 +156,7 @@ body:before {
 }
 
 .app-sidebar__search__icon.focus {
-  background-image: url(./assets/img/icon-search-green.svg);
+  background-image: url('../img/icon-search-green.svg');
 }
 
 .app-sidebar__lists {
@@ -471,7 +471,7 @@ body:before {
 .app-sidebar .navigation-btn i {
   color: inherit;
   background-size: contain;
-  background: url(./assets/img/icon-arrow-thin-right.svg) no-repeat center;
+  background: url('../img/icon-arrow-thin-right.svg') no-repeat center;
 }
 
 .icon {
@@ -487,12 +487,12 @@ body:before {
 }
 
 .icon.icon-contact {
-  background-image: url(./assets/img/icon-contact.svg);
+  background-image: url('../img/icon-contact.svg');
   background-size: 20px;
 }
 
 .icon.icon-menu {
-  background-image: url(./assets/img/icon-menu.svg);
+  background-image: url('../img/icon-menu.svg');
 }
 
 .app-sidebar-container {
@@ -589,7 +589,7 @@ body:before {
 
 .app-sidebar .form-container i.submit-icon.icon-arrow-thin-right {
   background-size: contain;
-  background: url(./assets/img/icon-arrow-thin-right.svg) no-repeat center;
+  background: url('../img/icon-arrow-thin-right.svg') no-repeat center;
   height: 2em;
   width: 2em;
 }
@@ -738,7 +738,7 @@ ul.contact-list .call-button {
 .app-sidebar.create-group .contact-list .contact-item.selected:after {
   content: '';
   position: absolute;
-  background: url("./assets/img/icon-check.svg") no-repeat center;
+  background: url('../img/icon-check.svg') no-repeat center;
   background-size: contain;
   top: 50%;
   left: 33px;
