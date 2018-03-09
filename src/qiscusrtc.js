@@ -231,7 +231,7 @@ QiscusRTC.prototype.connectWebSocket = function() {
   };
 
   function createPeer(feed, i) {
-    var pc = new SimplePeer({ initiator: i, stream: rtc.clientStream, config: { iceServers: [
+    var pc = new SimplePeer({ initiator: i, stream: rtc.clientStream, trickle: false, config: { iceServers: [
       { urls: 'stun:139.59.110.14:3478' },
       { urls: 'turn:139.59.110.14:3478', credential: 'qiscuslova', username: 'sangkil' }
     ]}});
