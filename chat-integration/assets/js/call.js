@@ -32,7 +32,8 @@ $(function() {
     });
     sessionStorage.USER = QiscusSDK.core.userData.email;
     sessionStorage.ROOM = roomId;
-    var win = window.open('http://localhost:9000/room', '_blank');
+    var url = window.location.origin + '/room'
+    var win = window.open(url, '_blank');
     if (win) {
       win.focus();
     } else {
