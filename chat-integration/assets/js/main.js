@@ -38,6 +38,8 @@ $(function () {
       newMessagesCallback: function (messages) {
         loadRoomList();
         patchUnreadMessages(messages);
+        handleSystemMessage(messages);
+        console.log('new.messages.callback', messages)
       },
       groupRoomCreatedCallback: function (data) {
         // Success creating group,
@@ -57,6 +59,7 @@ $(function () {
         $('#empty-chat-wrapper').addClass('hidden');
       },
       chatRoomCreatedCallback: function (data) {
+        console.log('chat.room.created', data)
         // check if room already exists on sidebar
         var roomId = data.room.id;
         var isExists = $('#room-' + roomId).length > 0;
@@ -74,6 +77,19 @@ $(function () {
   QiscusSDK.core.setUser(userData.userId, userData.secret, userData.username);
   // render the widget
   QiscusSDK.render();
+
+  var oldEmail = null
+  function patchCallButton () {
+    if (!QiscusSDK.core.selected) return
+    const target = QiscusSDK.core.selected.participants
+      .find(it => it.email !== QiscusSDK.core.email)
+    if (oldEmail !== target.email) { oldEmail = target.email }
+    else return
+    $('.call-button.-chat')
+      .attr('data-user-email', target.email)
+      .attr('data-user-name', target.username)
+  }
+  function handleSystemMessage (message) {}
 
   function clearUnreadMessages (roomId) {
     var $targetRoomDOM = $('li#room-' + roomId + '');
@@ -135,6 +151,9 @@ $(function () {
   }
 
   function attachClickListenerOnConversation() {
+    window.setInterval(() => {
+      patchCallButton();
+    }, 100)
     $('.app-sidebar__lists').on('click', 'li', function () {
       var $this = $(this);
       $('.app-sidebar__lists li').removeClass('active');
@@ -189,6 +208,8 @@ $(function () {
     li.appendChild(avatar);
     li.appendChild(detail);
     li.appendChild(unreadCount);
+
+    // li.addEventListener('click', () => patchCallButton())
     return li;
   }
 
@@ -341,7 +362,7 @@ $(function () {
     container.setAttribute('data-user-email', contactData.email);
     container.setAttribute('data-user-name', contactData.name);
     container.setAttribute('data-user-username', contactData.username);
-    
+
     detailContainer.classList.add('contact-item-detail');
     avatar.setAttribute('src', contactData.avatar_url);
     name.classList.add('name');
