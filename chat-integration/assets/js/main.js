@@ -86,6 +86,7 @@ $(function () {
     if (oldEmail !== target.email) { oldEmail = target.email }
     else return
     $('.call-button.-chat')
+      .parent()
       .attr('data-user-email', target.email)
       .attr('data-user-name', target.username)
   }
