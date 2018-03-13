@@ -953,7 +953,7 @@ ul.contact-list .call-button {
   font-size: 11px;
 }
 
-.call-button.-chat {
+.call-button--chat {
   z-index: 1;
   display: block;
   height: 45px;

@@ -85,12 +85,11 @@ $(function () {
       .find(it => it.email !== QiscusSDK.core.email)
     if (oldEmail !== target.email) { oldEmail = target.email }
     else return
-    $('.call-button.-chat')
+    $('.call-button--chat')
       .parent()
       .attr('data-user-email', target.email)
       .attr('data-user-name', target.username)
   }
-  function handleSystemMessage (message) {}
 
   function clearUnreadMessages (roomId) {
     var $targetRoomDOM = $('li#room-' + roomId + '');

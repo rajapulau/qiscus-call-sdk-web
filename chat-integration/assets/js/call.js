@@ -1,5 +1,5 @@
 $(function() {
-  $('.call-button').on('click', function() {
+  function handleCall () {
     var targetEmail = $(this).parent().data('user-email');
     var targetName = $(this).parent().data('user-name');
     var targetRoom = 0;
@@ -39,5 +39,11 @@ $(function() {
     } else {
       alert('Please allow popups.');
     }
+  }
+  $('.call-button--chat').on('click', function () {
+    handleCall.apply(this)
+  })
+  $('.call-button').on('click', function () {
+    handleCall.apply(this)
   });
 });
