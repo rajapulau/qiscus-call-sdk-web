@@ -2,7 +2,7 @@
 jQuery(function () {
   var isLoggedIn = window.sessionStorage.getItem('sdk-sample-app---is-loggedin');
   if (isLoggedIn && Boolean(isLoggedIn) === true) {
-    window.location.href = '/';
+    window.location.href = './';
   }
   QiscusSDK.core.init({
     AppId: window.SDK_APP_ID,
@@ -17,7 +17,7 @@ jQuery(function () {
         };
         window.sessionStorage.setItem('sdk-sample-app---is-loggedin', true);
         window.sessionStorage.setItem('sdk-sample-app---user-data', JSON.stringify(userData));
-        window.location.href = '/';
+        window.location.href = './';
       }
     }
   });
