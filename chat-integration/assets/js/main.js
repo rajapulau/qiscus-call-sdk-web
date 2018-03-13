@@ -10,7 +10,7 @@ $(function () {
   var isLoggedIn = window.sessionStorage.getItem('sdk-sample-app---is-loggedin');
   var userData = null;
   if (!isLoggedIn || Boolean(isLoggedIn) !== true) {
-    window.location.href = '/login';
+    window.location.href = './login';
   } else {
     userData = window.sessionStorage.getItem('sdk-sample-app---user-data');
     userData = JSON.parse(userData);
