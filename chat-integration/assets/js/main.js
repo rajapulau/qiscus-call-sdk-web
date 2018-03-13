@@ -566,8 +566,7 @@ $(function () {
     event.preventDefault()
     event.stopPropagation()
     $(this).parent().parent().parent().addClass('hidden')
-    var url = window.location.origin + '/room'
-    var win = window.open(url, '_blank')
+    var win = window.open('./room', '_blank')
     if (win) {
       win.focus()
     } else {
