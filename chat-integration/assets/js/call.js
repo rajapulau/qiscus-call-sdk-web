@@ -1,9 +1,9 @@
 $(function() {
-  function handleCall () {
-    var targetEmail = $(this).parent().data('user-email');
-    var targetName = $(this).parent().data('user-name');
+  function handleCall (targetEmail, targetName, targetAvatar) {
+    // var targetEmail = $(this).parent().data('user-email');
+    // var targetName = $(this).parent().data('user-name');
+    // var targetAvatar = $(this).prev().prev().attr('src');
     var targetRoom = 0;
-    var targetAvatar = $(this).prev().prev().attr('src');
     var roomId = 'CallID_' + Date.now().toString();
     var data = {
       system_event_type: 'custom',
@@ -27,6 +27,7 @@ $(function() {
         }
       }
     };
+    console.log('data', data)
     $.post('/call', data, function(data) {
       console.log(data);
     });
@@ -41,9 +42,15 @@ $(function() {
     }
   }
   $('.call-button--chat').on('click', function () {
-    handleCall.apply(this)
+    var el = document.querySelector('.sdk-wrapper')
+    var email = el.dataset.userEmail
+    var name = el.dataset.userName
+    handleCall(email, name, undefined)
   })
   $('.call-button').on('click', function () {
-    handleCall.apply(this)
+    var targetEmail = $(this).parent().data('user-email');
+    var targetName = $(this).parent().data('user-name');
+    var targetAvatar = $(this).prev().prev().attr('src');
+    handleCall(targetEmail, targetName, targetAvatar)
   });
 });
