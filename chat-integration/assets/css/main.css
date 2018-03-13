@@ -967,3 +967,53 @@ ul.contact-list .call-button {
   font-size: 20pt;
   outline: none;
 }
+
+.modal-confirmation-container {
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0,0,0,.4);
+}
+.modal-confirmation-shadow-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.4);
+}
+.modal-confirmation {
+  background: white;
+  height: 100px;
+  width: 250px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modal-confirmation .button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-confirmation .button {
+  border: 1px solid rgba(255,255,255,.4);
+  border-width: 1px 0 0 1px;
+  box-shadow: inset -1px -1px 0 rgba(0,0,0,0.3);
+  padding: 10px 20px;
+  color: white;
+}
+.modal-confirmation .button.-green {
+  background: #04b951;
+}
+.modal-confirmation .button.-red {
+  background: red;
+}

@@ -36,10 +36,12 @@ $(function () {
         renderSidebarHeader();
       },
       newMessagesCallback: function (messages) {
+        var message = messages.slice(0, 1).pop()
         loadRoomList();
         patchUnreadMessages(messages);
-        handleSystemMessage(messages);
-        console.log('new.messages.callback', messages)
+        if (message.type === 'system_event') {
+          handleSystemMessage(message);
+        }
       },
       groupRoomCreatedCallback: function (data) {
         // Success creating group,
@@ -515,4 +517,55 @@ $(function () {
         $mainSidebar.removeClass('hidden');
         return false;
       });
+
+  function handleSystemMessage (message) {
+    var isCall = message.payload.type === 'custom'
+      && message.payload.payload.type === 'call'
+    if (isCall) {
+      handleCallSystemMessage(message)
+    }
+  }
+  function handleCallSystemMessage (message) {
+    var payload = message.payload.payload
+    var isSelf = payload.call_caller.username === QiscusSDK.core.email
+    if (isSelf) return
+    $('.modal-confirmation-container')
+      .attr('data-caller-email', payload.call_caller.username)
+      .attr('data-caller-name', payload.call_caller.name)
+      .attr('data-callee-email', payload.call_callee.username)
+      .attr('data-callee-name', payload.call_callee.name)
+      .removeClass('hidden')
+    showNotification(payload)
+  }
+  function showNotification (payload) {
+    // Pass if notification are not granted
+    if (Notification.permission === 'denied') return
+    // Try to request for notification when not requested yet
+    if (Notification.permission !== 'denied') {
+      Notification.requestPermission()
+    }
+    // Only send notification when window are not focused
+    if (document.hidden) {
+      var notification = new Notification('You got a call from ' + payload.call_caller.name)
+      notification.onclick = function () {
+        window.focus()
+      }
+    }
+  }
+  $('.modal-confirmation-shadow-div').on('click', function (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    $(this).parent().addClass('hidden')
+  })
+  $('.modal-confirmation.-accept').on('click', function (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    // Do something when the user accepting call request
+  })
+  $('.modal-confirmation.-decline').on('click', function (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    // Do something when the user declining call request
+  })
+
 });
