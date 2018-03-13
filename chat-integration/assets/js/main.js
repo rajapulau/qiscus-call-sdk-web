@@ -529,6 +529,12 @@ $(function () {
     var payload = message.payload.payload
     var isSelf = payload.call_caller.username === QiscusSDK.core.email
     if (isSelf) return
+    $('#caller-avatar').attr('src', payload.call_caller.avatar);
+    $('#caller-name').text(payload.call_caller.name);
+    sessionStorage.USER = QiscusSDK.core.email;
+    sessionStorage.ROOM = payload.call_room_id;
+    sessionStorage.INITIATOR = false;
+    sessionStorage.AUTOACCEPT = true;
     $('.modal-confirmation-container')
       .attr('data-caller-email', payload.call_caller.username)
       .attr('data-caller-name', payload.call_caller.name)
@@ -555,17 +561,23 @@ $(function () {
   $('.modal-confirmation-shadow-div').on('click', function (event) {
     event.preventDefault()
     event.stopPropagation()
-    $(this).parent().addClass('hidden')
   })
-  $('.modal-confirmation.-accept').on('click', function (event) {
+  $('.modal-confirmation').on('click', '.-accept', function (event) {
     event.preventDefault()
     event.stopPropagation()
-    // Do something when the user accepting call request
+    $(this).parent().parent().parent().addClass('hidden')
+    var url = window.location.origin + '/room'
+    var win = window.open(url, '_blank')
+    if (win) {
+      win.focus()
+    } else {
+      alert('Please allow popups.')
+    }
   })
-  $('.modal-confirmation.-decline').on('click', function (event) {
+  $('.modal-confirmation').on('click', '.-decline', function (event) {
     event.preventDefault()
     event.stopPropagation()
-    // Do something when the user declining call request
+    $(this).parent().parent().parent().addClass('hidden')
   })
 
 });
