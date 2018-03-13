@@ -14,12 +14,16 @@
     <div class="modal-confirmation-container hidden">
       <div class="modal-confirmation-shadow-div"></div>
       <div class="modal-confirmation">
-        <p class="description">
-          You got call from {name}
-        </p>
+        <div class="caller-head-info">
+          <img id="caller-avatar" src="">
+        </div>
+        <div class="caller-name-info">
+          <h2 id="caller-name"></h2>
+        </div>
         <div class="button-group">
-          <button class="button -green -accept">Accept</button>
-          <button class="button -red -decline">Decline</button>
+          <button class="button -red -decline"><i class="fa fa-close"></i> Reject</button>
+          &nbsp;&nbsp;&nbsp;
+          <button class="button -green -accept"><i class="fa fa-phone"></i> Accept</button>
         </div>
       </div>
     </div>
