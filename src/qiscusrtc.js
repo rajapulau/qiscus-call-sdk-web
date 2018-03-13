@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /* QiscusRTC Signaling Hub
  */
@@ -48,15 +48,15 @@ QiscusRTC.prototype.initCall = function(clientId, room, initiator, autoAccept) {
 
   rtc.clientId = clientId;
   rtc.room = room;
-  rtc.initiator = initiator;
-  rtc.autoAccept = autoAccept;
+  rtc.initiator = initiator === "true";
+  rtc.autoAccept = autoAccept === "true";
   rtc.connectWebSocket();
 };
 
 QiscusRTC.prototype.connectWebSocket = function() {
   var rtc = this;
 
-  rtc.ws = new WebSocket('wss://rtc.qiscus.com/signal');
+  rtc.ws = new WebSocket("wss://rtc.qiscus.com/signal");
 
   rtc.ws.onopen = function() {
     console.log("Socket connection established");
@@ -90,6 +90,8 @@ QiscusRTC.prototype.connectWebSocket = function() {
       } else {
         rtc.onError(data.message);
       }
+    } else {
+      //console.log(res);
     }
 
     if (res.event == "user_new") {
@@ -105,7 +107,9 @@ QiscusRTC.prototype.connectWebSocket = function() {
     } else if (res.event == "room_data") {
       rtc.onMessage(res.sender, data);
     } else if (res.event == "room_data_private") {
-      if (data.event == "call_ack") {
+      if (data.event == "call_sync") {
+        //
+      } else if (data.event == "call_ack") {
         //
       } else if (data.event == "call_accept") {
         createPeer(res.sender, true);
@@ -136,6 +140,8 @@ QiscusRTC.prototype.connectWebSocket = function() {
 
         rtc.roomFeeds[res.sender].pc.signal(candidate);
       }
+    } else {
+      //console.log(res);
     }
   };
 
@@ -178,9 +184,9 @@ QiscusRTC.prototype.connectWebSocket = function() {
       }
     })
     .catch(function(error) {
-      var errstr = '';
-      if (error.name == 'OverconstrainedError' && error.constraint) {
-        errstr = 'Camera resolution is not supported: ' + rtc.selectedDevices.videoWidth + 'X' + rtc.selectedDevices.videoHeight;
+      var errstr = "";
+      if (error.name == "OverconstrainedError" && error.constraint) {
+        errstr = "Camera resolution is not supported: " + rtc.selectedDevices.videoWidth + "X" + rtc.selectedDevices.videoHeight;
       }
       if (errstr) {
         rtc.onError(errstr);
@@ -232,12 +238,12 @@ QiscusRTC.prototype.connectWebSocket = function() {
 
   function createPeer(feed, i) {
     var pc = new SimplePeer({ initiator: i, stream: rtc.clientStream, trickle: false, config: { iceServers: [
-      { urls: 'stun:139.59.110.14:3478' },
-      { urls: 'turn:139.59.110.14:3478', credential: 'qiscuslova', username: 'sangkil' }
+      { urls: "stun:139.59.110.14:3478" },
+      { urls: "turn:139.59.110.14:3478", credential: "qiscuslova", username: "sangkil" }
     ]}});
     rtc.roomFeeds[feed].pc = pc;
 
-    rtc.roomFeeds[feed].pc.on('signal', function(data) {
+    rtc.roomFeeds[feed].pc.on("signal", function(data) {
       var payload = {
         request: "room_data",
         room: rtc.room,
@@ -248,11 +254,11 @@ QiscusRTC.prototype.connectWebSocket = function() {
       rtc.ws.send(JSON.stringify(payload));
     });
 
-    rtc.roomFeeds[feed].pc.on('stream', function(stream) {
+    rtc.roomFeeds[feed].pc.on("stream", function(stream) {
       rtc.onRemoteStream(feed, stream);
     });
 
-    rtc.roomFeeds[feed].pc.on('close', function() {
+    rtc.roomFeeds[feed].pc.on("close", function() {
       rtc.onPeerClosed(feed);
       removeFeed(feed);
     });
