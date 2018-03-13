@@ -27,12 +27,13 @@ $(function() {
         }
       }
     };
-    console.log('data', data)
     $.post('/call', data, function(data) {
       console.log(data);
     });
     sessionStorage.USER = QiscusSDK.core.userData.email;
     sessionStorage.ROOM = roomId;
+    sessionStorage.INITIATOR = true;
+    sessionStorage.AUTOACCEPT = false;
     var url = window.location.origin + '/room'
     var win = window.open(url, '_blank');
     if (win) {

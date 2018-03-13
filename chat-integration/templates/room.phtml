@@ -56,7 +56,7 @@
       var str = null;
       var rem_id = null;
       qiscusrtc = new QiscusRTC('<?= $CALL_APP_ID; ?>', '<?= $CALL_APP_SECRET; ?>');
-      qiscusrtc.initCall(sessionStorage.USER, sessionStorage.ROOM, true, true);
+      qiscusrtc.initCall(sessionStorage.USER, sessionStorage.ROOM, sessionStorage.INITIATOR, sessionStorage.AUTOACCEPT);
       qiscusrtc.onLocalStream = function(stream) {
         var video = document.querySelector('#local-video');
         video.srcObject = stream;
