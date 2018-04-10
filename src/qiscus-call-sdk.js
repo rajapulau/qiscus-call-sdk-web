@@ -49,8 +49,8 @@ QiscusCall.prototype.initCall = function(clientId, room, initiator, autoAccept) 
 
   call.clientId = clientId;
   call.room = room;
-  call.initiator = initiator === "true";
-  call.autoAccept = autoAccept === "true";
+  call.initiator = initiator === true;
+  call.autoAccept = autoAccept === true;
   call.connectWebSocket();
 };
 
