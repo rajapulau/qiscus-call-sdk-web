@@ -55,8 +55,8 @@
     $(function() {
       var str = null;
       var rem_id = null;
-      var initiator = initiator === sessionStorage.INITIATOR;
-      var autoaccept = initiator === sessionStorage.AUTOACCEPT;
+      var initiator = sessionStorage.INITIATOR === 'true';
+      var autoaccept = sessionStorage.AUTOACCEPT === 'true';
       qiscuscall = new QiscusCall('<?= $CALL_APP_ID; ?>', '<?= $CALL_APP_SECRET; ?>');
       qiscuscall.initCall(sessionStorage.USER, sessionStorage.ROOM, initiator, autoaccept);
       qiscuscall.onLocalStream = function(stream) {
