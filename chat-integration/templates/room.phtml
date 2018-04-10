@@ -46,23 +46,25 @@
     </svg>
   </div>
   <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/8.3.0/simplepeer.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.1.1/adapter.min.js"></script>
-  <script src="https://rawgit.com/qiscus/qiscus-rtc-sdk-web/master/src/qiscusrtc.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/9.0.0/simplepeer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.1.5/adapter.min.js"></script>
+  <script src="https://rawgit.com/qiscus/qiscus-call-sdk-web/master/src/qiscus-call-sdk.js"></script>
   <script>
-    var qicusrtc;
+    var qiscuscall;
 
     $(function() {
       var str = null;
       var rem_id = null;
-      qiscusrtc = new QiscusRTC('<?= $CALL_APP_ID; ?>', '<?= $CALL_APP_SECRET; ?>');
-      qiscusrtc.initCall(sessionStorage.USER, sessionStorage.ROOM, sessionStorage.INITIATOR, sessionStorage.AUTOACCEPT);
-      qiscusrtc.onLocalStream = function(stream) {
+      var initiator = initiator === sessionStorage.INITIATOR;
+      var autoaccept = initiator === sessionStorage.AUTOACCEPT;
+      qiscuscall = new QiscusCall('<?= $CALL_APP_ID; ?>', '<?= $CALL_APP_SECRET; ?>');
+      qiscuscall.initCall(sessionStorage.USER, sessionStorage.ROOM, initiator, autoaccept);
+      qiscuscall.onLocalStream = function(stream) {
         var video = document.querySelector('#local-video');
         video.srcObject = stream;
         str = stream;
       };
-      qiscusrtc.onRemoteStream = function(id, stream) {
+      qiscuscall.onRemoteStream = function(id, stream) {
         rem_id = id;
         $('#icons').removeClass('hidden');
         $('#icons').addClass('active');
@@ -75,7 +77,7 @@
         var mini_video = document.querySelector('#mini-video');
         mini_video.srcObject = str;
       };
-      qiscusrtc.onPeerClosed = function(id) {
+      qiscuscall.onPeerClosed = function(id) {
         if (id == rem_id) {
           $('#icons').addClass('hidden');
           $('#icons').removeClass('active');
