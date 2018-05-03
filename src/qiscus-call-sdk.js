@@ -293,6 +293,22 @@ QiscusCall.prototype.startCall = function(appId, appSecret) {
   call.appSecret = appSecret;
 };
 
+QiscusCall.prototype.muteMic = function(mute) {
+  var call = this;
+
+  for (var i = 0; i < call.clientStream.getAudioTracks().length; i++) {
+    call.clientStream.getAudioTracks()[i].enabled = !mute;
+  }
+};
+
+QiscusCall.prototype.disableCamera = function(disable) {
+  var call = this;
+
+  for (var i = 0; i < call.clientStream.getVideoTracks().length; i++) {
+    call.clientStream.getVideoTracks()[i].enabled = !disable;
+  }
+};
+
 QiscusCall.prototype.onMessage = function(id, data) {};
 
 QiscusCall.prototype.onLocalStream = function(stream) {};
