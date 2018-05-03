@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="description" content="WebRTC reference app">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="/simple/css/main.css">
+  <link rel="stylesheet" href="css/main.css">
   <title>QiscusRTC Simple Call Demo</title>
 </head>
 
@@ -58,7 +58,7 @@
   <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-peer/8.3.0/simplepeer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/6.1.1/adapter.min.js"></script>
-  <script src="https://rawgit.com/qiscus/qiscus-rtc-sdk-web/master/src/qiscusrtc.js"></script>
+  <script src="https://rawgit.com/qiscus/qiscus-call-sdk-web/master/src/qiscus-call-sdk.js"></script>
   <script>
     var qicusrtc;
 
@@ -67,7 +67,7 @@
       var rem_id = null;
       var name = Date.now().toString();
       var room = window.location.hash.substring(1);
-      qiscusrtc = new QiscusRTC('sample-application-C2', 'KpPiqKGpoN');
+      qiscusrtc = new QiscusCall('sample-application-C2', 'KpPiqKGpoN');
 
       $('#confirm-join-button').on('click', function(evt) {
         evt.preventDefault();
@@ -110,6 +110,30 @@
           mini_video.srcObject = null;
         }
       };
+
+      $('#mute-audio').click(function(e) {
+        e.preventDefault();
+
+        if ($(this).hasClass('on')) {
+          $(this).removeClass('on');
+          qiscusrtc.muteMic(false);
+        } else {
+          $(this).addClass('on');
+          qiscusrtc.muteMic(true);
+        }
+      });
+
+      $('#mute-video').click(function(e) {
+        e.preventDefault();
+
+        if ($(this).hasClass('on')) {
+          $(this).removeClass('on');
+          qiscusrtc.disableCamera(false);
+        } else {
+          $(this).addClass('on');
+          qiscusrtc.disableCamera(true);
+        }
+      });
     });
   </script>
 </body>
