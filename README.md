@@ -29,12 +29,20 @@ qiscuscall.initCall(username, room, true, true);
 qiscuscall.initCall(username, room, false, true);
 ```
 
+## End Call
+```javascript
+qiscuscall.endCall();
+```
+
 ## Methods and Events
 ### `var qiscuscall = new QiscusCall('app_Id', 'app_Token')`
 Initialization method.
 
 ### `qiscuscall.initCall(username, room, initiator, autoaccept)`
 Start call.
+
+### `qiscuscall.endCall()`
+End call.
 
 ### `qiscuscall.onLocalStream = function(stream)`
 This events will be fired when successfully captured your video using webcam. It gives you `stream` object.
