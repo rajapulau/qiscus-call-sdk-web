@@ -296,17 +296,9 @@ QiscusCall.prototype.startCall = function(appId, appSecret) {
 QiscusCall.prototype.endCall = function() {
   var call = this;
 
-  for (var i = 0; i < call.clientStream.getVideoTracks().length; i++) {
-    call.clientStream.getVideoTracks()[i].enabled = false;
-  }
-
-  for (var i = 0; i < call.clientStream.getAudioTracks().length; i++) {
-    call.clientStream.getAudioTracks()[i].enabled = false;
-  }
-
-  for (var i = 0; i < call.roomFeeds.length; i++) {
-    call.roomFeeds[i].pc.destroy();
-  }
+  for (var id in call.roomFeeds) { 
+    call.roomFeeds[id].pc.destroy();
+  };
 };
 
 QiscusCall.prototype.muteMic = function(mute) {
