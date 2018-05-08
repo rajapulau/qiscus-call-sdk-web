@@ -305,7 +305,7 @@ QiscusCall.prototype.endCall = function() {
   }
 
   for (var i = 0; i < call.roomFeeds.length; i++) {
-    call.roomFeeds[i].destroy();
+    call.roomFeeds[i].pc.destroy();
   }
 };
 
