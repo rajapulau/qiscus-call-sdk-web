@@ -306,6 +306,7 @@ QiscusCall.prototype.muteMic = function(mute) {
 
   for (var i = 0; i < call.clientStream.getAudioTracks().length; i++) {
     call.clientStream.getAudioTracks()[i].enabled = !mute;
+    call.onPeerClosed(i);
   }
 };
 
