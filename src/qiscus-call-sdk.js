@@ -293,11 +293,24 @@ QiscusCall.prototype.startCall = function(appId, appSecret) {
   call.appSecret = appSecret;
 };
 
-QiscusCall.prototype.endCall = function() {
+QiscusCall.prototype.endCall = function(turnOff) {
   var call = this;
+
+  if (turnOff) {
+    for (var i = 0; i < call.clientStream.getVideoTracks().length; i++) {
+      call.clientStream.getVideoTracks()[i].stop();
+    }
+
+    for (var i = 0; i < call.clientStream.getAudioTracks().length; i++) {
+      call.clientStream.getAudioTracks()[i].stop();
+    }
+
+    call.clientStream = null;
+  }
 
   for (var id in call.roomFeeds) { 
     call.roomFeeds[id].pc.destroy();
+    call.roomFeeds[id].pc = null;
   };
 };
 
@@ -306,7 +319,6 @@ QiscusCall.prototype.muteMic = function(mute) {
 
   for (var i = 0; i < call.clientStream.getAudioTracks().length; i++) {
     call.clientStream.getAudioTracks()[i].enabled = !mute;
-    call.onPeerClosed(i);
   }
 };
 
