@@ -69,12 +69,6 @@ function QiscusCall(appId, appToken) {
     .then(function(stream) {
       call.clientStream = stream;
       call.onLocalStream(stream);
-
-      if (call.initiator) {
-        createRoom();
-      } else {
-        joinRoom();
-      }
     })
     .catch(function(error) {
       var errstr = "";
@@ -117,6 +111,12 @@ QiscusCall.prototype.connectWebSocket = function() {
     if (res.response == "register") {
       if (data.success) {
         call.appSecret = data.token;
+
+        if (call.initiator) {
+          createRoom();
+        } else {
+          joinRoom();
+        }
       } else {
         call.onError(data.message);
       }
@@ -306,7 +306,7 @@ QiscusCall.prototype.endCall = function(turnOff) {
     call.clientStream = null;
   }
 
-  for (var id in call.roomFeeds) { 
+  for (var id in call.roomFeeds) {
     call.roomFeeds[id].pc.destroy();
     call.roomFeeds[id].pc = null;
   };
