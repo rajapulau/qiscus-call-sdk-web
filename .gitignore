@@ -2,3 +2,4 @@
 src/vendors/
 npm-debug.log
 .vscode/
+node_modules/
