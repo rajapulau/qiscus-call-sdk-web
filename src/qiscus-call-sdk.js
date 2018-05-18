@@ -19,8 +19,9 @@ function QiscusCall(appId, appToken) {
   call.appToken = appToken;
   call.appSecret = null;
 
+
+  // Auto populate devices
   getDevices();
-  captureLocalVideo();
 
   function getDevices() {
     call.devices = { microphones: [], cameras: [], speakers: [] };
@@ -41,54 +42,14 @@ function QiscusCall(appId, appToken) {
       call.onError(error);
     });
   };
-
-  function captureLocalVideo() {
-    if (call.selectedDevices.microphone) {
-      var audiosel = { deviceId: call.selectedDevices.microphone };
-    } else {
-      var audiosel = true;
-    }
-
-    if (call.selectedDevices.camera) {
-      var videosel = {
-        deviceId: call.selectedDevices.camera,
-        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
-        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
-      };
-    } else {
-      var videosel = {
-        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
-        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
-      };
-    }
-
-    navigator.mediaDevices.getUserMedia({
-      audio: audiosel,
-      video: videosel
-    })
-    .then(function(stream) {
-      call.clientStream = stream;
-      call.onLocalStream(stream);
-    })
-    .catch(function(error) {
-      var errstr = "";
-      if (error.name == "OverconstrainedError" && error.constraint) {
-        errstr = "Camera resolution is not supported: " + call.selectedDevices.videoWidth + "X" + call.selectedDevices.videoHeight;
-      }
-      if (errstr) {
-        call.onError(errstr);
-      } else {
-        call.onError(error.name + ": " + error.constraint);
-      }
-    });
-  };
 }
 
-QiscusCall.prototype.initCall = function(clientId, room, initiator, autoAccept) {
+QiscusCall.prototype.initCall = function(clientId, room, stream, initiator, autoAccept) {
   var call = this;
 
   call.clientId = clientId;
   call.room = room;
+  call.clientStream = stream;
   call.initiator = initiator === true;
   call.autoAccept = autoAccept === true;
   call.connectWebSocket();
@@ -112,10 +73,14 @@ QiscusCall.prototype.connectWebSocket = function() {
       if (data.success) {
         call.appSecret = data.token;
 
-        if (call.initiator) {
-          createRoom();
+        if (call.clientStream == null) {
+          captureLocalVideo();
         } else {
-          joinRoom();
+          if (call.initiator) {
+            createRoom();
+          } else {
+            joinRoom();
+          }
         }
       } else {
         call.onError(data.message);
@@ -193,6 +158,53 @@ QiscusCall.prototype.connectWebSocket = function() {
 
   call.ws.onclose = function() {
     call.onError("Disconnected from server");
+  };
+
+  function captureLocalVideo() {
+    if (call.selectedDevices.microphone) {
+      var audiosel = { deviceId: call.selectedDevices.microphone };
+    } else {
+      var audiosel = true;
+    }
+
+    if (call.selectedDevices.camera) {
+      var videosel = {
+        deviceId: call.selectedDevices.camera,
+        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
+        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
+      };
+    } else {
+      var videosel = {
+        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
+        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
+      };
+    }
+
+    navigator.mediaDevices.getUserMedia({
+      audio: audiosel,
+      video: videosel
+    })
+    .then(function(stream) {
+      call.clientStream = stream;
+      call.onLocalStream(stream);
+
+      if (call.initiator) {
+        createRoom();
+      } else {
+        joinRoom();
+      }
+    })
+    .catch(function(error) {
+      var errstr = "";
+      if (error.name == "OverconstrainedError" && error.constraint) {
+        errstr = "Camera resolution is not supported: " + call.selectedDevices.videoWidth + "X" + call.selectedDevices.videoHeight;
+      }
+      if (errstr) {
+        call.onError(errstr);
+      } else {
+        call.onError(error.name + ": " + error.constraint);
+      }
+    });
   };
 
   function register() {
