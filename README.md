@@ -72,6 +72,6 @@ This events will be fired when receive remote video from your partner. It gives 
 This events will be fired when your call session ended. It gives remote `id`.
 
 ## Sample
-- Basic sample ()
-- Multiparty / conference ()
-- Qiscus Chat SDK integration ()
+- [Basic sample](https://github.com/qiscus/qiscus-call-sdk-web/tree/master/sample/simple)
+- [Multiparty / conference](https://github.com/qiscus/qiscus-call-sdk-web/tree/master/sample/multiparty)
+- [Qiscus Chat SDK integration](https://github.com/qiscus/qiscus-call-sdk-web/tree/master/sample/chat-integration)
