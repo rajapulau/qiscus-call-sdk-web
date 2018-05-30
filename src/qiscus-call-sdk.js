@@ -1,5 +1,7 @@
 "use strict";
 
+module.exports = QiscusCall;
+
 require('webrtc-adapter');
 var io = require('socket.io-client');
 var SimplePeer = require('simple-peer');
@@ -15,6 +17,7 @@ function QiscusCall(appId, appToken) {
   call.clientId = null;
   call.initiator = false;
   call.autoAccept = false;
+  call.multiparty = false;
   call.clientStream = null;
   call.selectedDevices = {};
   call.roomFeeds = [];
@@ -59,6 +62,18 @@ QiscusCall.prototype.initCall = function(clientId, room, stream, initiator, auto
   call.connectWebSocket();
 };
 
+QiscusCall.prototype.initConf = function(clientId, room, stream, initiator, autoAccept) {
+  var call = this;
+
+  call.clientId = clientId;
+  call.room = room;
+  call.clientStream = stream;
+  call.initiator = initiator === true;
+  call.autoAccept = autoAccept === true;
+  call.multiparty = true;
+  call.connectWebSocket();
+};
+
 QiscusCall.prototype.connectWebSocket = function() {
   var call = this;
 
@@ -70,6 +85,7 @@ QiscusCall.prototype.connectWebSocket = function() {
   };
 
   call.ws.onmessage = function(message) {
+    console.log(message.data);
     var res = JSON.parse(message.data);
     var data = JSON.parse(res.data);
 
@@ -221,10 +237,16 @@ QiscusCall.prototype.connectWebSocket = function() {
   };
 
   function createRoom() {
+    if (call.multiparty) {
+      var max_participant = 5;
+    } else {
+      var max_participant = 2;
+    }
+
     var payload = {
       request: "room_create",
       room: call.room,
-      data: JSON.stringify({ token: call.appSecret, max_participant: 2 })
+      data: JSON.stringify({ token: call.appSecret, max_participant: max_participant })
     };
 
     call.ws.send(JSON.stringify(payload));
@@ -284,9 +306,7 @@ QiscusCall.prototype.connectWebSocket = function() {
       call.roomFeeds[feed].pc.destroy();
     }
 
-    if (call.roomFeeds[feed].pc != null) {
-      call.roomFeeds[feed].pc = null;
-    }
+    call.roomFeeds[feed] = null;
   }
 
   function removeFeed(feed) {
