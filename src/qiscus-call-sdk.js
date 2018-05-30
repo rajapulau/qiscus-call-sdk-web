@@ -85,7 +85,6 @@ QiscusCall.prototype.connectWebSocket = function() {
   };
 
   call.ws.onmessage = function(message) {
-    console.log(message.data);
     var res = JSON.parse(message.data);
     var data = JSON.parse(res.data);
 
