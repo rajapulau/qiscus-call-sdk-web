@@ -1,0 +1,29 @@
+{
+  "name": "qiscus-call-sdk-web",
+  "version": "0.1.0",
+  "description": "Qiscus call SDK web",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-dev": "browserify -s QiscusCall src/qiscus-call-sdk.js > dist/qiscus-call-sdk.js",
+    "build-production": "browserify -s QiscusCall src/qiscus-call-sdk.js | uglifyjs -m > dist/qiscus-call-sdk.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qiscus/qiscus-call-sdk-web.git"
+  },
+  "author": "Fitra Aditya <fitra@qiscus.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qiscus/qiscus-call-sdk-web/issues"
+  },
+  "homepage": "https://github.com/qiscus/qiscus-call-sdk-web#readme",
+  "devDependencies": {
+    "browserify": "^16.1.1",
+    "uglify-js": "^3.3.20"
+  },
+  "dependencies": {
+    "simple-peer": "^9.1.1",
+    "socket.io-client": "^2.1.1",
+    "webrtc-adapter": "^6.1.5"
+  }
+}
