@@ -4,7 +4,7 @@ This SDK contains functionalities to enable audio/video call on your web applica
 
 ## Installation
 ```javascript
-<script src="https://rawgit.com/qiscus/qiscus-call-sdk-web/master/src/qiscus-call-sdk.js"></script>
+<script src="https://s3-ap-southeast-1.amazonaws.com/qiscus-call-sdk/web/1.0.1/qiscus-call-sdk.min.js"></script>
 ```
 
 ## Initialization
@@ -14,22 +14,37 @@ var qiscuscall = new QiscusCall('app_Id', 'app_Token');
 
 Please contact us to get this AppId and AppToken.
 
-## Start Call
+### Start Call
 ```javascript
-qiscuscall.initCall(username, room, initiator, autoaccept);
+qiscuscall.initCall(username, room, stream, initiator, autoaccept);
 ```
 
-### For caller
+#### For caller
 ```javascript
-qiscuscall.initCall(username, room, true, true);
+qiscuscall.initCall(username, room, null, true, true);
 ```
 
-### For callee
+#### For callee
 ```javascript
-qiscuscall.initCall(username, room, false, true);
+qiscuscall.initCall(username, room, null, false, true);
 ```
 
-## End Call
+### Start Conference
+```javascript
+qiscuscall.initConf(username, room, stream, initiator, autoaccept);
+```
+
+#### For room creator / initiator
+```javascript
+qiscuscall.initConf(username, room, null, true, true);
+```
+
+#### For room participant
+```javascript
+qiscuscall.initConf(username, room, null, false, true);
+```
+
+### End Call
 ```javascript
 qiscuscall.endCall();
 ```
@@ -38,8 +53,11 @@ qiscuscall.endCall();
 ### `var qiscuscall = new QiscusCall('app_Id', 'app_Token')`
 Initialization method.
 
-### `qiscuscall.initCall(username, room, initiator, autoaccept)`
+### `qiscuscall.initCall(username, room, stream, initiator, autoaccept)`
 Start call.
+
+### `qiscuscall.initConf(username, room, stream, initiator, autoaccept)`
+Start conference.
 
 ### `qiscuscall.endCall()`
 End call.
@@ -52,3 +70,8 @@ This events will be fired when receive remote video from your partner. It gives 
 
 ### `qiscuscall.onPeerClosed = function(id)`
 This events will be fired when your call session ended. It gives remote `id`.
+
+## Sample
+- Basic sample ()
+- Multiparty / conference ()
+- Qiscus Chat SDK integration ()
