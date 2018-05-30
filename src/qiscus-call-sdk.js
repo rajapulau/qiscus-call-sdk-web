@@ -1,5 +1,9 @@
 "use strict";
 
+require('webrtc-adapter');
+var io = require('socket.io-client');
+var SimplePeer = require('simple-peer');
+
 /* Qiscus Call Signaling Hub
  */
 
