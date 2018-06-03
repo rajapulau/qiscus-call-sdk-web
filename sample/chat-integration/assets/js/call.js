@@ -11,10 +11,9 @@ $(function() {
       subject_email: targetEmail,
       message: QiscusSDK.core.userData.username + ' call ' + targetName,
       payload: {
-        type: 'call',
+        type: 'webview_call',
         call_event: 'incoming',
-        call_room_id: roomId,
-        call_is_video: true,
+        call_url: 'https://rtc.qiscus.com/demos/simple/init.html#' + roomId,
         call_caller: {
           username: QiscusSDK.core.userData.email,
           name: QiscusSDK.core.userData.username,
@@ -27,14 +26,14 @@ $(function() {
         }
       }
     };
-    $.post('./call', data, function(data) {
+    $.post('./init_call', data, function(data) {
       console.log(data);
     });
     sessionStorage.USER = QiscusSDK.core.userData.email;
     sessionStorage.ROOM = roomId;
     sessionStorage.INITIATOR = true;
     sessionStorage.AUTOACCEPT = false;
-    var win = window.open('./room', '_blank');
+    var win = window.open('./call', '_blank');
     if (win) {
       win.focus();
     } else {
@@ -46,11 +45,34 @@ $(function() {
     var email = el.dataset.userEmail
     var name = el.dataset.userName
     handleCall(email, name, undefined)
-  })
+  });
   $('.call-button').on('click', function () {
     var targetEmail = $(this).parent().data('user-email');
     var targetName = $(this).parent().data('user-name');
     var targetAvatar = $(this).prev().prev().attr('src');
     handleCall(targetEmail, targetName, targetAvatar)
+  });
+  $('.conf-button--chat').on('click', function (e) {
+    e.preventDefault();
+    var uniqueId = new Date().getTime();
+    var payload = {
+      text: 'Hi, I invited you join a conference call.',
+      buttons: [{
+        label: 'Join conference',
+        type: 'link',
+        payload: {
+          url: 'https://rtc.qiscus.com/demos/multiparty/init.html#' + uniqueId
+        }
+      }]
+    };
+    var stringifiedPayload = JSON.stringify(payload);
+    console.log(QiscusSDK.core.selected)
+    QiscusSDK.core.sendComment(
+      QiscusSDK.core.selected.id,
+      'Hi, I invited you join a conference call.',
+      uniqueId,
+      'buttons',
+      stringifiedPayload
+    );
   });
 });

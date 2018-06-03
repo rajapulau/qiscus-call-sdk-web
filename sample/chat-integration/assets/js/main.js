@@ -84,7 +84,7 @@ $(function () {
   function patchCallButton () {
     if (!QiscusSDK.core.selected) return
     const target = QiscusSDK.core.selected.participants
-      .find(it => it.email !== QiscusSDK.core.email)
+      .find(it => it.email !== QiscusSDK.core.userData.email)
     if (oldEmail !== target.email) { oldEmail = target.email }
     else return
     $('.call-button--chat')
@@ -103,7 +103,7 @@ $(function () {
   }
   function patchUnreadMessages (messages) {
     var unreadMessages = messages.filter(function (message) {
-      return message.email !== QiscusSDK.core.email;
+      return message.email !== QiscusSDK.core.userData.email;
     });
     unreadMessages.forEach(function (message) {
       var roomId = message.room_id;
@@ -380,9 +380,16 @@ $(function () {
     callButton.classList.add('fa-video-camera');
     callButton.innerText = '';
 
+    var confButton = document.createElement('i');
+    confButton.classList.add('conf-button');
+    confButton.classList.add('fa');
+    confButton.classList.add('fa-users');
+    confButton.innerText = '';
+
     container.appendChild(avatar);
     container.appendChild(detailContainer);
     container.appendChild(callButton);
+    container.appendChild(confButton);
 
     return container;
   }
@@ -527,11 +534,11 @@ $(function () {
   }
   function handleCallSystemMessage (message) {
     var payload = message.payload.payload
-    var isSelf = payload.call_caller.username === QiscusSDK.core.email
+    var isSelf = payload.call_caller.username === QiscusSDK.core.userData.email
     if (isSelf) return
     $('#caller-avatar').attr('src', payload.call_caller.avatar);
     $('#caller-name').text(payload.call_caller.name);
-    sessionStorage.USER = QiscusSDK.core.email;
+    sessionStorage.USER = QiscusSDK.core.userData.email;
     sessionStorage.ROOM = payload.call_room_id;
     sessionStorage.INITIATOR = false;
     sessionStorage.AUTOACCEPT = true;

@@ -25,7 +25,7 @@ $app->get('/login', function($request, $response, $args) {
     "CHAT_APP_ID" => $this->CHAT_SDK_APP_ID
   ]);
 });
-$app->post('/call', function($request, $response, $args) {
+$app->post('/init_call', function($request, $response, $args) {
   $params = $request->getParams();
   $client = new \GuzzleHttp\Client();
 
@@ -49,8 +49,7 @@ $app->post('/call', function($request, $response, $args) {
     'payload' => [
       'type' => $params['payload']['type'],
       'call_event' => $params['payload']['call_event'],
-      'call_room_id' => $params['payload']['call_room_id'],
-      'call_is_video' => (bool)$params['payload']['call_is_video'],
+      'call_url' => $params['payload']['call_url'],
       'call_caller' => [
         'username' => $params['payload']['call_caller']['username'],
         'name' => $params['payload']['call_caller']['name'],
@@ -73,8 +72,8 @@ $app->post('/call', function($request, $response, $args) {
 
   return $response->withJson(json_decode($res->getBody()));
 });
-$app->get('/room', function($request, $response, $args) {
-  return $this->view->render($response, 'room.phtml', [
+$app->get('/call', function($request, $response, $args) {
+  return $this->view->render($response, 'call.phtml', [
     "CALL_APP_ID" => $this->CALL_SDK_APP_ID,
     "CALL_APP_SECRET" => $this->CALL_SDK_APP_SECRET
   ]);

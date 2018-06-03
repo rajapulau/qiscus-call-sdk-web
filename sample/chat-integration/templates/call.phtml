@@ -10,10 +10,8 @@
 </head>
 
 <body>
-  <div id="videos" class="hidden">
-    <div id="mini-video-box">
-      <video id="my-mini-video" class="mini-video" autoplay muted></video>
-    </div>
+  <div id="videos">
+    <video id="mini-video" autoplay muted></video>
     <video id="remote-video" autoplay></video>
     <video id="local-video" autoplay muted></video>
   </div>
@@ -56,69 +54,37 @@
       var str = null;
       var rem_id = null;
       qiscuscall = new QiscusCall('<?= $CALL_APP_ID; ?>', '<?= $CALL_APP_SECRET; ?>');
-      qiscuscall.initConf(sessionStorage.USER, sessionStorage.ROOM, null, true, true);
-      qiscusrtc.onLocalStream = function(stream) {
-        $('#icons').removeClass('hidden');
-        $('#icons').addClass('active');
-        $('#videos').removeClass('hidden');
+      qiscuscall.initCall(sessionStorage.USER, sessionStorage.ROOM, null, true, true);
+      qiscuscall.onLocalStream = function(stream) {
         var video = document.querySelector('#local-video');
         video.srcObject = stream;
         str = stream;
       };
-      qiscusrtc.onRemoteStream = function(id, stream) {
-        rem_id.push(id);
-        rem_active = id;
-
-        if (!$('#remote-video').hasClass('active')) {
-          $('#remote-video').addClass('active');
-        }
-
+      qiscuscall.onRemoteStream = function(id, stream) {
+        rem_id = id;
+        $('#icons').removeClass('hidden');
+        $('#icons').addClass('active');
+        $('#remote-video').addClass('active');
+        $('#mini-video').addClass('active');
         var video = document.querySelector('#local-video');
         video.srcObject = null;
         var remote_video = document.querySelector('#remote-video');
         remote_video.srcObject = stream;
-
-        if (rem_id.length == 1) {
-          $('#my-mini-video').addClass('active');
-          var my_video = document.querySelector('#my-mini-video');
-          my_video.srcObject = str;
-        } else {
-          var remote_video = document.querySelector('#remote-video');
-          remote_video.srcObject = stream;
-        }
-
-        $('#mini-video-box').prepend('<video id="mini-video-' + id + '" class="mini-video active" autoplay></video>');
-        var mini_video = document.querySelector('#mini-video-' + id);
-        mini_video.srcObject = stream;
+        var mini_video = document.querySelector('#mini-video');
+        mini_video.srcObject = str;
       };
-      qiscusrtc.onPeerClosed = function(id) {
-        if (rem_id.indexOf(id) > -1) {
-          if (rem_id.length > 1) {
-            $('#mini-video-' + id).remove();
-
-            if (rem_active == id) {
-              var get_video = document.querySelector('#mini-video-box video:last-child');
-              var str_ = get_video.srcObject;
-              var remote_video = document.querySelector('#remote-video');
-              remote_video.srcObject = str_;
-            }
-          } else {
-            $('#mini-video-' + id).remove();
-            $('#remote-video').removeClass('active');
-            $('#my-mini-video').removeClass('active');
-            var video = document.querySelector('#local-video');
-            video.srcObject = str;
-            var my_video = document.querySelector('#my-mini-video');
-            my_video.srcObject = null;
-            var remote_video = document.querySelector('#remote-video');
-            remote_video.srcObject = null;
-          }
-          
-          for (var i=rem_id.length-1; i>=0; i--) {
-            if (rem_id[i] === id) {
-              rem_id.splice(i, 1);
-            }
-          }
+      qiscuscall.onPeerClosed = function(id) {
+        if (id == rem_id) {
+          $('#icons').addClass('hidden');
+          $('#icons').removeClass('active');
+          $('#remote-video').removeClass('active');
+          $('#mini-video').removeClass('active');
+          var video = document.querySelector('#local-video');
+          video.srcObject = str;
+          var remote_video = document.querySelector('#remote-video');
+          remote_video.srcObject = null;
+          var mini_video = document.querySelector('#mini-video');
+          mini_video.srcObject = null;
         }
       };
     });
