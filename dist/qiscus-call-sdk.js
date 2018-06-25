@@ -17875,22 +17875,22 @@ function QiscusCall(appId, appToken) {
 
   call.videoQuality = {
     'QVGA': {
-      video: {width: {exact: 320}, height: {exact: 240}}
+      width: {exact: 320}, height: {exact: 240}
     },
     'VGA': {
-      video: {width: {exact: 640}, height: {exact: 480}}
+      width: {exact: 640}, height: {exact: 480}
     },
     'HD': {
-      video: {width: {exact: 1280}, height: {exact: 720}}
+      width: {exact: 1280}, height: {exact: 720}
     },
     'FULLHD': {
-      video: {width: {exact: 1920}, height: {exact: 1080}}
+      width: {exact: 1920}, height: {exact: 1080}
     },
     '4K': {
-      video: {width: {exact: 4096}, height: {exact: 2160}}
+      width: {exact: 4096}, height: {exact: 2160}
     },
     '8K': {
-      video: {width: {exact: 7680}, height: {exact: 4320}}
+      width: {exact: 7680}, height: {exact: 4320}
     }
   };
 
