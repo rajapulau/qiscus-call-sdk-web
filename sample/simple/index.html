@@ -87,6 +87,7 @@
         evt.preventDefault();
         var room = $('#room-id-input').val();
 
+        qiscusrtc.setVideoQuality(qiscusrtc.videoQuality.HD);
         qiscusrtc.initCall(name, room, null, true, true);
         qiscusrtc.onLocalStream = function(stream) {
           $('#videos').removeClass('hidden');
