@@ -4,7 +4,7 @@ This SDK contains functionalities to enable audio/video call on your web applica
 
 ## Installation
 ```javascript
-<script src="https://s3-ap-southeast-1.amazonaws.com/qiscus-call-sdk/web/1.0.1/qiscus-call-sdk.min.js"></script>
+<script src="https://s3-ap-southeast-1.amazonaws.com/qiscus-call-sdk/web/1.0.2/qiscus-call-sdk.min.js"></script>
 ```
 
 ## Initialization
@@ -13,6 +13,19 @@ var qiscuscall = new QiscusCall('app_Id', 'app_Token');
 ```
 
 Please contact us to get this AppId and AppToken.
+
+### Set Video Qualtiy
+```javascript
+qiscuscall.setVideoQuality(qiscuscall.videoQuality.VGA);
+```
+
+Quality:
+- qiscuscall.videoQuality.QVGA
+- qiscuscall.videoQuality.VGA
+- qiscuscall.videoQuality.HD
+- qiscuscall.videoQuality.FULLHD
+- qiscuscall.videoQuality.4K
+- qiscuscall.videoQuality.8K
 
 ### Start Call
 ```javascript
