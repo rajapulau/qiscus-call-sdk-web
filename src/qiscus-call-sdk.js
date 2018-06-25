@@ -15,17 +15,39 @@ function QiscusCall(appId, appToken) {
   call.room = null;
   call.devices = null;
   call.clientId = null;
+  call.audioOnly = false;
   call.initiator = false;
   call.autoAccept = false;
   call.multiparty = false;
   call.clientStream = null;
-  call.selectedDevices = {};
   call.roomFeeds = [];
 
   call.appId = appId;
   call.appToken = appToken;
   call.appSecret = null;
 
+  call.videoQuality = {
+    'QVGA': {
+      video: {width: {exact: 320}, height: {exact: 240}}
+    },
+    'VGA': {
+      video: {width: {exact: 640}, height: {exact: 480}}
+    },
+    'HD': {
+      video: {width: {exact: 1280}, height: {exact: 720}}
+    },
+    'FULLHD': {
+      video: {width: {exact: 1920}, height: {exact: 1080}}
+    },
+    '4K': {
+      video: {width: {exact: 4096}, height: {exact: 2160}}
+    },
+    '8K': {
+      video: {width: {exact: 7680}, height: {exact: 4320}}
+    }
+  };
+
+  call.selectedQuality = call.videoQuality.QVGA;
 
   // Auto populate devices
   getDevices();
@@ -49,6 +71,18 @@ function QiscusCall(appId, appToken) {
       call.onError(error);
     });
   };
+}
+
+QiscusCall.prototype.setAudioOnly = function(audioOnly) {
+  var call = this;
+
+  call.audioOnly = audioOnly;
+};
+
+QiscusCall.prototype.setVideoQuality = function(videoQuality) {
+  var call = this;
+
+  call.selectedQuality = videoQuality;
 }
 
 QiscusCall.prototype.initCall = function(clientId, room, stream, initiator, autoAccept) {
@@ -180,28 +214,9 @@ QiscusCall.prototype.connectWebSocket = function() {
   };
 
   function captureLocalVideo() {
-    if (call.selectedDevices.microphone) {
-      var audiosel = { deviceId: call.selectedDevices.microphone };
-    } else {
-      var audiosel = true;
-    }
-
-    if (call.selectedDevices.camera) {
-      var videosel = {
-        deviceId: call.selectedDevices.camera,
-        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
-        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
-      };
-    } else {
-      var videosel = {
-        width: call.selectedDevices.videoWidth ? { exact: parseInt(call.selectedDevices.videoWidth) } : { exact: 320 },
-        height: call.selectedDevices.videoHeight ? { exact: parseInt(call.selectedDevices.videoHeight) } : { exact: 240 }
-      };
-    }
-
     navigator.mediaDevices.getUserMedia({
-      audio: audiosel,
-      video: videosel
+      audio: true,
+      video: call.audioOnly ? false : call.selectedQuality
     })
     .then(function(stream) {
       call.clientStream = stream;
@@ -216,7 +231,7 @@ QiscusCall.prototype.connectWebSocket = function() {
     .catch(function(error) {
       var errstr = "";
       if (error.name == "OverconstrainedError" && error.constraint) {
-        errstr = "Camera resolution is not supported: " + call.selectedDevices.videoWidth + "X" + call.selectedDevices.videoHeight;
+        errstr = "Camera resolution is not supported.";
       }
       if (errstr) {
         call.onError(errstr);
